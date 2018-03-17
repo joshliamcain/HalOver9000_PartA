@@ -1,35 +1,36 @@
 
-from hal.__main__ import run_mode
-from hal.watch_your_back import GameState
+from hal import __main__
 
 
-print("\nTest 1 - Moves")
-
-mode = "Moves"
-game_str = ("X - - - O O - X\n"
-			"- - - O - O O -\n"
-			"O - O - - - - @\n"
-			"- - - O O O - @\n"
-			"- O O - - @ @ -\n"
-			"- @ @ - @ @ @ -\n"
-			"- @ @ @ - - - -\n"
-			"X - - - - - - X\n")
-
-game = GameState(game_str)
-print(run_mode(mode, game))
+def get_line_iter_func(fp):
+	iterator = iter(fp.read().splitlines())
+	def func():
+		return next(iterator)
+	return func
 
 
-print("\nTest 2 - Massacre")
+print("Test 1: Massacre")
 
-mode = "Massacre"
-game_str = ("X - - - O O - X\n"
-			"- - - O - O O -\n"
-			"O - O - - - - @\n"
-			"- - - O O O - @\n"
-			"- O O - - @ @ -\n"
-			"- @ @ - @ @ @ -\n"
-			"- @ @ @ - - - -\n"
-			"X - - - - - - X\n")
+fp = open("massacre_testinput.txt", "r")
+next_line = get_line_iter_func(fp)
 
-game = GameState(game_str)
-print(run_mode(mode, game))
+mode, game = __main__.get_input(next_line)
+print(mode, game.board)
+output = __main__.run_mode(mode, game)
+print(output)
+
+fp.close()
+
+
+
+print("Test 2: Moves")
+
+fp = open("moves_testinput.txt", "r")
+next_line = get_line_iter_func(fp)
+
+mode, game = __main__.get_input(next_line)
+print(mode, game.board)
+output = __main__.run_mode(mode, game)
+print(output)
+
+fp.close()
