@@ -22,7 +22,7 @@ class T(_TileTuple):
 		return T(self.c+tile.c, self.r+tile.r)
 
 	def __rsub__(self, tile):
-		return self - tile
+		return tile + -1*self
 
 	def __radd__(self, tile):
 		return self + tile

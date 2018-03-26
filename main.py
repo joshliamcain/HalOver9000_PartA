@@ -1,4 +1,5 @@
 from hal.watch_your_back import WatchYourBack, Players
+from hal.AI_Player import kill_black_sequence
 from hal.tile_util import T
 
 
@@ -37,12 +38,15 @@ def run_mode(mode, game):
 
 
 def massacre(game):
-	return "Massacre"
+	moves = kill_black_sequence(game)
+	string = []
+	for (frm, to) in moves:
+		string.append(str(frm)+" -> "+str(to))
+	return "\n".join(string)
 
 
 def moves(game):
 	out = []
-	print(game)
 	out.append(str(len(game.possible_moves(Players.WHITE))))
 	out.append(str(len(game.possible_moves(Players.BLACK))))
 	return "\n".join(out)

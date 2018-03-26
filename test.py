@@ -14,15 +14,19 @@ def get_print_func():
 	return func
 
 if __name__ == "__main__":
+	
 	print("Test 1: Massacre")
-
 	fp = open("massacre_testinput.txt", "r")
 	main(get_line_iter_func(fp), get_print_func())
 	fp.close()
 
 
 	print("Test 2: Moves")
-
 	fp = open("moves_testinput.txt", "r")
+	main(get_line_iter_func(fp), get_print_func())
+	fp.close()
+
+	print("Test 3: Massacre2")
+	fp = open("massacre_testinput2.txt", "r")
 	main(get_line_iter_func(fp), get_print_func())
 	fp.close()

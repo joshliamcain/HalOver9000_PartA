@@ -1,5 +1,6 @@
 from hal.tile_util import T
 from enum import Enum
+from copy import copy
 
 class Players(Enum):
     BLACK = "black"
@@ -25,9 +26,16 @@ class WatchYourBack():
 
     def __str__(self):
         msg = list()
-        msg.append("size: " + str(self.__size))
-        msg.append("tiles: " + str(self.__pieces))
+        msg.append("\n\tGame instance:")
+        msg.append("\tWhite:" + str(self.__pieces[Players.WHITE]))
+        msg.append("\tBlack:" + str(self.__pieces[Players.BLACK]))
         return "\n".join(msg)
+
+    def __repr__(self):
+        return str(self)
+
+    def numpieces(self, player):
+        return len(self.__pieces[player])
 
 
     def dump_pieces(self, white, black):
@@ -59,9 +67,9 @@ class WatchYourBack():
         tile_to -- location to move piece to
         """
         player = self.__get_tile(tile_from)
-        if self.__valid_move(tile_from, tile_to, player):
-            self.__pieces[player].remove(tile)
-            self.__pieces[player].add(tile)
+        if self.__valid_move(tile_from, tile_to):
+            self.__pieces[player].remove(tile_from)
+            self.__pieces[player].add(tile_to)
             self.__fight(player)
         else:
             raise Exception("Invalid move")
@@ -94,12 +102,12 @@ class WatchYourBack():
         # kill surrounded opponent pieces first
         for player in Players:
             if player == piece_owner: continue
-            for piece in self.__pieces[player]:
+            for piece in copy(self.__pieces[player]):
                 if self.__surrounded(piece, player):
                     self.__pieces[player].remove(piece)
 
         # kill surrounded player pieces
-        for piece in self.__pieces[piece_owner]:
+        for piece in copy(self.__pieces[piece_owner]):
                 if self.__surrounded(piece, piece_owner):
                     self.__pieces[piece_owner].remove(piece)
 
@@ -133,15 +141,16 @@ class WatchYourBack():
         move to empty tile, can't move diagonally, can't move nowhere or more
         than two tiles, if moving 2 tiles - there must be a piece inbetween
         """
-        if self.__get_tile(tile_from) not in Players: return False
-        if self.__get_tile(tile_to) != _EMPTY: return False
-        if (tile_to - tile_from).is_diag(): return False
+        checks = []
+        checks.append(self.__get_tile(tile_from) in Players)
+        checks.append(self.__get_tile(tile_to) == _EMPTY)
+        checks.append(not (tile_to - tile_from).is_diag())
         distance = (tile_to - tile_from).hypot()
-        if distance == 0 or distance > 2: return False
+        checks.append(distance > 0 and distance <= 2)
         if distance == 2:
-            tile_between = (tile_to - tile_from)*0.5 + tile_from
-            if self.__get_tile(tile_between) not in Players: return False
-        return True
+            tile_between = 0.5*(tile_to - tile_from) + tile_from
+            checks.append(self.__get_tile(tile_between) in Players)
+        return False not in checks
 
     def __get_tile(self, tile):
         if tile in self.__pieces[Players.WHITE]:
