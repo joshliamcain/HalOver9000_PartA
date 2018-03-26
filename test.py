@@ -1,5 +1,5 @@
 
-from hal import __main__
+from main import main
 
 
 def get_line_iter_func(fp):
@@ -8,29 +8,21 @@ def get_line_iter_func(fp):
 		return next(iterator)
 	return func
 
+def get_print_func():
+	def func(string):
+		print(string)
+	return func
 
-print("Test 1: Massacre")
+if __name__ == "__main__":
+	print("Test 1: Massacre")
 
-fp = open("massacre_testinput.txt", "r")
-next_line = get_line_iter_func(fp)
-
-mode, game = __main__.get_input(next_line)
-print(mode, game.board)
-output = __main__.run_mode(mode, game)
-print(output)
-
-fp.close()
-
+	fp = open("massacre_testinput.txt", "r")
+	main(get_line_iter_func(fp), get_print_func())
+	fp.close()
 
 
-print("Test 2: Moves")
+	print("Test 2: Moves")
 
-fp = open("moves_testinput.txt", "r")
-next_line = get_line_iter_func(fp)
-
-mode, game = __main__.get_input(next_line)
-print(mode, game.board)
-output = __main__.run_mode(mode, game)
-print(output)
-
-fp.close()
+	fp = open("moves_testinput.txt", "r")
+	main(get_line_iter_func(fp), get_print_func())
+	fp.close()

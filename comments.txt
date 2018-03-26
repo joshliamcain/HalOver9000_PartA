@@ -1,1 +1,2 @@
-run program: python3 test.py
+to run program: python3 main.py < testfile.txt
+to test program: python3 test.py
